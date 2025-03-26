@@ -2,24 +2,26 @@
 
 import json
 import pathlib
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, cast
 
 
-def read(
-    path: pathlib.Path, **kwargs: Any
-) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+def read(path: pathlib.Path) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
     """
     Read data from a JSON file.
 
     Args:
         path: Path to the JSON file
-        **kwargs: Additional options for JSON reading
 
     Returns:
-        Data from the JSON file (list or dictionary)
+        Data from the JSON file as a list of dictionaries or a dictionary
     """
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    # Explicitly cast the return value to the expected type
+    if isinstance(data, list):
+        return cast(List[Dict[str, Any]], data)
+    return cast(Dict[str, Any], data)
 
 
 def write(
